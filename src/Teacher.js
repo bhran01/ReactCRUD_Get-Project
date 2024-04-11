@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react'
 export default function Teacher() {
     //2.1 hook area
     const [teachers, setTeachers] = useState([]);
+    const [teacherName,setTeacherName] = useState('');
+    const [payload, setPayload] = useState({});
 
+    
     //useEffect() -used for page load,i want to call the api after the page rendered
     //useEffect(cbfn,arr); cbfn is a callback function , ()=>{}
     useEffect(() => {
@@ -36,49 +39,84 @@ export default function Teacher() {
     }, [])
     //2.2 function definition area
 
+    let sendData = () => {
+        fetch(`http://localhost:1337/api/teachers`, {
+            method: "POST",
+            headers: {
+                //P:V
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify(payload)
+        })
+            .then((res) => {
+                //I want to convert the respone into json readable
+                return res.json();
+            })
+            .then((data) => {
+                console.log(data);
+                if (data) {
+                    alert("Teacher Created Successfuly");
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
+
+    //need to write a function which will take the name and store that to payload object
+    let changeValue=(e)=>{
+        console.log(e.target.value)
+        setTeacherName(e.target.value)
+
+        setPayload({
+            ...payload,
+            data : {
+                name: document.querySelector('input#teacherNameLabel').value
+            }   
+        })
+    }
+
+
     //2.3 return area
     return (
-        <div className='container'>
-            <form>
-                <div className="mb-3">
-                    <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
-                    <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-                    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-                    <input type="password" className="form-control" id="exampleInputPassword1" />
-                </div>
-                <div className="mb-3 form-check">
-                    <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                    <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" className="btn btn-primary">Submit</button>
-            </form>
-            <br />
-            <hr />
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">CreateAt</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        teachers.map(
-                            (cv) => {
-                                return <tr>
-                                    <td>{cv.id}</td>
-                                    <td>{cv.name}</td>
-                                    <td>{cv.createdAt}</td>
-                                </tr>
-                            }
-                        )
-                    }
-                </tbody>
-            </table>
+        <>
+            <div className='loader'>
+
         </div>
+            <div className='container'>
+                <h1>Create Teacher</h1>
+                <form>
+                    <div className="mb-3">
+                        <label htmlFor="teacherNameLabel" className="form-label">Teacher Name</label>
+                        <input type="text" className="form-control" id="teacherNameLabel" name='name' onChange={(e)=>{changeValue(e)}} />
+                    </div>
+                    <button type="button" className="btn btn-primary" onClick={() => sendData()}>Submit</button>
+                </form>
+                <br />
+                <hr />
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">CreateAt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            teachers.map(
+                                (cv, idx) => {
+                                    return <tr key={idx}>
+                                        <td>{cv.id}</td>
+                                        <td>{cv.name}</td>
+                                        <td>{cv.createdAt}</td>
+                                    </tr>
+                                }
+                            )
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </>
     )
 }
