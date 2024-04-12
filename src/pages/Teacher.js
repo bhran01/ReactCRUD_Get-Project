@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import {Link} from 'react-router-dom'
 
 export default function Teacher() {
     //2.1 hook area
@@ -80,12 +81,12 @@ export default function Teacher() {
     //Delete record function
     let deleteTeacher = (element) => {
 
-        //if network is slow, spinner will run as per below bootstrap
+        //if network is slow, spinner will run as per below bootstrap,but its not working currently need to check
         document.getElementById('loader').innerHTML = `<div className="d-flex justify-content-center">
-        <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </div>
-    </div>`
+            <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>
+        </div>`
 
         let x = element.target.closest('tr')
         let ans = window.confirm('are you sure you want to delete the record?')
@@ -152,7 +153,7 @@ export default function Teacher() {
                                         <td>{cv.createdAt}</td>
                                         <td>
                                             <button className="btn btn-success btn-sm">View</button>
-                                            <button className="btn btn-primary btn-sm">Edit</button>
+                                            <Link className="btn btn-primary btn-sm" to={`/editTeacher?id=${cv.id}&name=${cv.name}`}>Edit</Link>
                                             <button className="btn btn-danger btn-sm" onClick={(e) => { deleteTeacher(e) }}>Delete</button>
                                         </td>
                                     </tr>

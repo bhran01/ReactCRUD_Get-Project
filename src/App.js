@@ -1,8 +1,15 @@
 import './App.css';
-import Teacher from './Teacher';
+import Teacher from './pages/Teacher';
+import { BrowserRouter ,Routes,Route } from 'react-router-dom';
+import EditTeacher from './pages/EditTeacher';
 function App() {
   return (
-    <Teacher/>
+    <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<Teacher/>}></Route>
+      <Route path='/editTeacher' element={<EditTeacher/>}></Route>
+    </Routes>
+    </BrowserRouter>
   );
 }
 
